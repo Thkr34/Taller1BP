@@ -15,6 +15,15 @@ public class Main {
 		//22.386.978-5
 		//ICCI
 		
+		//contadores utiles
+		int totalActividades = 0; //contador de total de actividades
+		int actividadesMartin = 0; //contador de actividades de martin
+		int actividadesCatalina = 0; //contador de actividades de catalina
+		int actividadesEstefania = 0; //contador de actividades de estefania
+		
+		//otros
+		Scanner sc = new Scanner(System.in);
+		
 		//archivos a leer y guardar su informacion
 		File usuarios = new File("Usuarios.txt");
 		File registros = new File("Registros.txt");
@@ -67,113 +76,63 @@ public class Main {
 		
 		//try - catch que lee y guarda el archivo Registros.txt
 		try (Scanner lectorRegistros = new Scanner(registros)) {
-			int i = 0;
-			int m = 0;
-			int c = 0;
-			int e = 0;
+			totalActividades = 0;
+			actividadesMartin = 0;
+			actividadesCatalina = 0;
+			actividadesEstefania = 0;
 			while (lectorRegistros.hasNext()) {
 				String linea = lectorRegistros.nextLine();
 				String[] partes = linea.split(";");
-				usuario [i] = partes[0];
-				fecha [i] = partes[1];
-				horas [i] = Integer.parseInt(partes[2]);
-				actividad [i] = partes[3];
+				usuario [totalActividades] = partes[0];
+				fecha [totalActividades] = partes[1];
+				horas [totalActividades] = Integer.parseInt(partes[2]);
+				actividad [totalActividades] = partes[3];
 				
 				if (partes[0].equals("Martin")) {
-					auxMartin [m]= partes[0];
-					fechaMartin [m] = partes[1];
-					horasMartin [m] = Integer.parseInt(partes[2]);
-					actividadMartin [m] = partes[3];
-					m++;
+					auxMartin [actividadesMartin]= partes[0];
+					fechaMartin [actividadesMartin] = partes[1];
+					horasMartin [actividadesMartin] = Integer.parseInt(partes[2]);
+					actividadMartin [actividadesMartin] = partes[3];
+					actividadesMartin++;
 				} else if (partes[0].equals("Catalina")) {
-					auxCatalina [c]= partes[0];
-					fechaCatalina [c] = partes[1];
-					horasCatalina [c] = Integer.parseInt(partes[2]);
-					actividadCatalina [c] = partes[3];
-					c++;
+					auxCatalina [actividadesCatalina]= partes[0];
+					fechaCatalina [actividadesCatalina] = partes[1];
+					horasCatalina [actividadesCatalina] = Integer.parseInt(partes[2]);
+					actividadCatalina [actividadesCatalina] = partes[3];
+					actividadesCatalina++;
 				} else if (partes[0].equals("Estefania")) {
-					auxEstefania [e]= partes[0];
-					fechaEstefania [e] = partes[1];
-					horasEstefania [e] = Integer.parseInt(partes[2]);
-					actividadEstefania [e] = partes[3];
-					e++;
+					auxEstefania [actividadesEstefania]= partes[0];
+					fechaEstefania [actividadesEstefania] = partes[1];
+					horasEstefania [actividadesEstefania] = Integer.parseInt(partes[2]);
+					actividadEstefania [actividadesEstefania] = partes[3];
+					actividadesEstefania++;
 				}			
-				i++;			
+				totalActividades++;			
 			}		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		Scanner sc = new Scanner(System.in);
-		
 		//inicio de la interaccion con el sistema
 		System.out.println("Bienvenido! ¿a que deseas acceder?");
-		System.out.print("1) Menu de usuarios \n2) Menu de analisis \n3) Salir\nrespuesta: ");	
-		int entrada = menuPrincipal();
-		String usuarioActual;
-		String contraseñaActual;
-		boolean usuarioValido = true;
-		boolean contraseñaCorrecta = true;
+		System.out.print("1) Menu de usuarios \n2) Menu de analisis \n3) Salir\nrespuesta: ");
 		
-		String respuesta = menuUsuarios(entrada, contraseñas);
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
-		sc.close();
-		//try - catch que sobreescribe el archivo Usuarios.txt
-		//en caso de que no se haga ningun cambio lo sobreescribira igual pero no cambiara el contenido
-		//como si usaras suprimir y luego Ctrl + z	
-		try (BufferedWriter sobreEscribirUsuarios = new BufferedWriter(new FileWriter("Usuarios.txt",false))) {
-			int i = 0;
-			do {
-				if (i>0) {
-					sobreEscribirUsuarios.newLine(); }
-			
-				sobreEscribirUsuarios.write(id[i] + ";" + contraseñas[i]);
-				i++;
-			} while(i<3);
-
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		//try - catch que sobreexcribe el archivo Registros.txt
-		//se aplica lo mismo que con la sobreescritura anterior
-		try (BufferedWriter sobreEscribirRegistros = new BufferedWriter(new FileWriter("Registros",false))) {
-			int i = 0;
-			do {
-				if (i>0) {
-					sobreEscribirRegistros.newLine(); }
-				
-				sobreEscribirRegistros.write(usuario[i] + ";" + fecha[i] + ";" + horas [i] + ";" + actividad[i]);
-				i++;
-			} while(i<300);
-		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		gestorLogico(menuPrincipal(sc),usuario,fecha,horas,actividad,id,contraseñas,sc,totalActividades);
+	
 	}
 	
 	//funcion menu principal, osea:
 	//1) Menu de usuarios
 	//2) Menu de analisis
 	//3) Salir
-	public static int menuPrincipal() {
+	//returna la opcion elegida.
+	public static int menuPrincipal(Scanner sc) {
 		int entrada = -1;
 		boolean entradaValida = true;
-		Scanner sc = new Scanner(System.in);
 		do {
 			try {
 				entrada = sc.nextInt();
+				sc.nextLine();
 				entradaValida = false;
 				if (entrada > 3 || entrada < 1) {
 					entradaValida = true;
@@ -187,19 +146,69 @@ public class Main {
 		return entrada;
 		
 	}
-	public static String menuUsuarios(int entrada, String[] contraseñas) {
+	//gestorLogico reacciona dependiendo que se eligio en menuPrincipal, tambien es el que sobreescribe el archivo al final de toda la
+	//interaccion con el operador.
+	public static void gestorLogico(int opcion, String[] usuario, String[] fecha, int[] horas, String[] actividad, String[] id, String[] contraseñas, Scanner sc,int totalActividades) {
+		switch(opcion) {
+		case(1):
+			int usuarioLogeado = verificadorUsuarios(contraseñas,sc);
+			if (usuarioLogeado == 1) {
+				
+			}
+			menuUsuarios(sc,totalActividades);
+			gestorLogico(3,usuario,fecha,horas,actividad,id,contraseñas,sc,totalActividades);
+		case(2):
+			menuAnalisis();
+			gestorLogico(3,usuario,fecha,horas,actividad,id,contraseñas,sc,totalActividades);
+		case(3):
+			//try - catch que sobreexcribe el archivo Registros.txt
+			//se aplica lo mismo que con la sobreescritura anterior
+			try (BufferedWriter sobreEscribirRegistros = new BufferedWriter(new FileWriter("Registros.txt",false))) {
+				int i = 0;
+				boolean primerEscrito = true;
+				do { 
+					if (usuario[i] == null) {
+						i++;
+						continue;
+					} else if (primerEscrito){
+						sobreEscribirRegistros.write(usuario[i] + ";" + fecha[i] + ";" + horas [i] + ";" + actividad[i]);
+						primerEscrito = false;
+						i++;
+					} else {
+						sobreEscribirRegistros.newLine();
+						sobreEscribirRegistros.write(usuario[i] + ";" + fecha[i] + ";" + horas [i] + ";" + actividad[i]);
+						i++;
+					}
+				} while(i<300);
+			
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try (BufferedWriter sobreEscribirUsuarios = new BufferedWriter(new FileWriter("Usuarios.txt",false))) {
+				int i = 0;
+				do {
+					if (i>0) {
+						sobreEscribirUsuarios.newLine(); }
+					
+					sobreEscribirUsuarios.write(id[i]+";"+contraseñas[i]);
+					i++;
+				} while(i<3);
+		
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		System.out.println("bye!");
+		sc.close();
+		System.exit(0);	
+		}		
+	}
+	//funcion que se encarga de verificar si el usuario y su respectiva contraseña son ingresados correctamente.
+	public static int verificadorUsuarios(String[] contraseñas,Scanner sc) {
 		String usuarioActual;
 		String contraseñaActual;
 		boolean usuarioValido = true;
 		boolean contraseñaCorrecta = true;
-		Scanner sc = new Scanner(System.in);
-		
-		//reaccion del sistema dependiendo la opcion elegida previamente en menuPrincipal()
-		switch(entrada) {
-		
-		//caso 1, menu de usuario, pide el ID de usuario y la respectiva contraseña.
-		case (1):
-			do {
+		do {
 			System.out.print("usuario: ");
 			usuarioActual = sc.nextLine();
 			
@@ -211,11 +220,11 @@ public class Main {
 					contraseñaActual = sc.nextLine();
 					if (contraseñaActual.equals(contraseñas[0])) {
 						contraseñaCorrecta = false;
-						return "0";
+						return 0;
 					}
 					System.out.println("contraseña incorrecta, intentelo de nuevo.");
 				} while(contraseñaCorrecta);
-				break;
+				
 			} else if (usuarioActual.equals("Catalina")) {
 				usuarioValido = false;
 				System.out.println("usuario encontrado.");
@@ -224,11 +233,11 @@ public class Main {
 					contraseñaActual = sc.nextLine();
 					if (contraseñaActual.equals(contraseñas[1])) {
 						contraseñaCorrecta = false;
-						return "1";
+						return 1;
 					}
 					System.out.println("contraseña incorrecta, intentelo de nuevo.");
 				} while(contraseñaCorrecta);
-				break;
+				
 			}else if (usuarioActual.equals("Estefania")) {
 				usuarioValido = false;
 				System.out.println("usuario encontrado.");
@@ -237,26 +246,60 @@ public class Main {
 					contraseñaActual = sc.nextLine();
 					if (contraseñaActual.equals(contraseñas[2])) {
 						contraseñaCorrecta = false;
-						return "2";
+						return 2;
 					}
 					System.out.println("contraseña incorrecta, intentelo de nuevo.");
 				} while(contraseñaCorrecta);
-				break; }
-			
+			}
 			System.out.println("usuario no registrado, intente de nuevo.");
 			} while (usuarioValido);
-			break;
-		
-		//caso 2, menu de analisis, aun por desarrollar.
-		case(2):
-			return "caso 2";
-		
-		
-		//caso 3, salir del sistema. (shutdown)
-		case(3):
-			System.out.println("bye!");
-			return "salir";
-		}
-		return "esto ni va a aparecer xd";
+		return -1;
 	}
+	
+	
+	public static void menuUsuarios(Scanner sc, int totalActividades) {
+		int respuesta;
+		boolean respuestaValida;
+		do {
+			System.out.println("que deseas realizar?\n1) Registrar actividad.\n2) Modificar actividad.\n3) Eliminar actividad.\n4) Cambiar contraseña.\n5) Salir.\nrespuesta: ");
+			respuesta = -1;
+			respuestaValida = true;
+			do {
+				try {
+					respuesta = sc.nextInt();
+					sc.nextLine();
+					respuestaValida = false;
+					if (respuesta > 5 || respuesta < 1) {
+						respuestaValida = true;
+						System.out.print("no existe la opcion " + respuesta + " intentelo de nuevo. \nrespuesta: ");
+					}
+				} catch (InputMismatchException e) {
+					System.out.println("Error: entrada invalida.");
+					System.out.print("intente de nuevo: ");
+					sc.next(); }
+				} while (respuestaValida);
+			if (respuesta == 1) {
+				System.out.println(totalActividades);
+			} else if (respuesta == 2) {
+				
+			} else if (respuesta == 3) {
+				
+			} else if (respuesta == 4) {
+				
+			} else if (respuesta == 5) {
+				return;
+			}
+		} while (respuesta!=5);
+		
+		
+		
+		return;
+	}
+	
+	public static void menuAnalisis() {
+		return;
+	}
+	
+		
+	
 }
