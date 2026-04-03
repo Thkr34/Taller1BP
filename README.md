@@ -3,7 +3,9 @@
 ## Integrantes:
 
 Bastián Perines - 22.386.978-5 - Thkr34
+
 todo el taller esta unicamente en el paquete taller (dentro de Taller1) en la clase Main.java
+
 es clonar y utilizar, no se necesitan mas instrucciones antes de empezar a probar el codigo.
 
 ## Contexto: Procastinacion
